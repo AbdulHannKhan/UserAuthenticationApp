@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { useAuth } from '../../../Context/AuthContext';
 import { HomeControllerViewModel } from '../../../Types/controllers';
@@ -6,6 +6,11 @@ import { HomeControllerViewModel } from '../../../Types/controllers';
 export function useHomeController(): HomeControllerViewModel {
   const { user, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
+
+  const userRows = useMemo(() => [
+    { label: 'Name', value: user?.name ?? '-' },
+    { label: 'Email', value: user?.email ?? '-' },
+  ], [user?.name, user?.email]);
 
   const handleLogout = useCallback(async (): Promise<void> => {
     setIsLoggingOut(true);
@@ -17,7 +22,7 @@ export function useHomeController(): HomeControllerViewModel {
   }, [logout]);
 
   return {
-    user,
+    userRows,
     isLoggingOut,
     handleLogout,
   };

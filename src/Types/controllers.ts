@@ -19,8 +19,13 @@ export type SignupControllerViewModel = {
   goToLogin: () => void;
 };
 
+export type InfoRow = {
+  label: string;
+  value: string;
+};
+
 export type HomeControllerViewModel = {
-  user: AuthUser;
+  userRows: InfoRow[];
   isLoggingOut: boolean;
   handleLogout: () => Promise<void>;
 };
