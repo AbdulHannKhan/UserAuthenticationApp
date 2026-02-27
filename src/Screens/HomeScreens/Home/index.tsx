@@ -1,7 +1,8 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { moderateScale as ms, scale as s, verticalScale as vs } from 'react-native-size-matters';
 
+import { CustomButton } from '../../../Components/Button/CustomButton';
 import { Colors, Fonts } from '../../../Theme';
 import { useHomeController } from '../../../ViewController/HomeScreens/Home';
 
@@ -20,15 +21,12 @@ export function Home(): React.JSX.Element {
         <Text style={styles.value}>{user?.email ?? '-'}</Text>
       </View>
 
-      <Pressable
-        style={styles.logoutButton}
+      <CustomButton
+        title={isLoggingOut ? 'Logging out...' : 'Logout'}
+        variant="destructive"
         onPress={handleLogout}
-        disabled={isLoggingOut}
-      >
-        <Text style={styles.logoutText}>
-          {isLoggingOut ? 'Logging out...' : 'Logout'}
-        </Text>
-      </Pressable>
+        loading={isLoggingOut}
+      />
     </View>
   );
 }
@@ -36,7 +34,7 @@ export function Home(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.white,
     padding: s(20),
     justifyContent: 'center',
   },
@@ -73,16 +71,5 @@ const styles = StyleSheet.create({
     fontSize: ms(16),
     color: Colors.textPrimary,
     fontFamily: Fonts.semiBold,
-  },
-  logoutButton: {
-    backgroundColor: Colors.error,
-    borderRadius: ms(10),
-    paddingVertical: vs(13),
-    alignItems: 'center',
-  },
-  logoutText: {
-    color: Colors.white,
-    fontSize: ms(16),
-    fontFamily: Fonts.bold,
   },
 });

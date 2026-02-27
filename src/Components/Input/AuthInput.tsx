@@ -35,7 +35,7 @@ function AuthInputComponent({
           <Pressable onPress={onToggleSecure} style={styles.eyeButton} hitSlop={8}>
             <Feather
               name={secureTextEntry ? 'eye-off' : 'eye'}
-              size={ms(20)}
+              size={ms(16)}
               color={Colors.textMuted}
             />
           </Pressable>

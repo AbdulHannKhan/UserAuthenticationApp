@@ -3,13 +3,13 @@ import React from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
 } from 'react-native';
 import { moderateScale as ms, scale as s, verticalScale as vs } from 'react-native-size-matters';
 
+import { CustomButton } from '../../../Components/Button/CustomButton';
 import { AuthInput } from '../../../Components/Input/AuthInput';
 import { AuthStackParamList } from '../../../Navigation/AuthStack';
 import { Colors, Fonts } from '../../../Theme';
@@ -53,19 +53,19 @@ export function Login({ navigation }: Props): React.JSX.Element {
           error={formik.touched.password ? formik.errors.password : undefined}
         />
 
-        <Pressable
-          style={[styles.primaryButton, formik.isSubmitting ? styles.buttonDisabled : undefined]}
+        <CustomButton
+          title={formik.isSubmitting ? 'Logging in...' : 'Login'}
           onPress={formik.submitForm}
-          disabled={formik.isSubmitting}
-        >
-          <Text style={styles.primaryButtonText}>
-            {formik.isSubmitting ? 'Logging in...' : 'Login'}
-          </Text>
-        </Pressable>
+          loading={formik.isSubmitting}
+          style={styles.loginButton}
+        />
 
-        <Pressable style={styles.secondaryButton} onPress={goToSignup}>
-          <Text style={styles.secondaryButtonText}>Go to Signup</Text>
-        </Pressable>
+        <CustomButton
+          title="Go to Signup"
+          variant="secondary"
+          onPress={goToSignup}
+          style={styles.signupLink}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -74,7 +74,7 @@ export function Login({ navigation }: Props): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.white,
   },
   content: {
     flexGrow: 1,
@@ -94,29 +94,10 @@ const styles = StyleSheet.create({
     fontSize: ms(15),
     fontFamily: Fonts.regular,
   },
-  primaryButton: {
-    backgroundColor: Colors.primary,
-    borderRadius: ms(10),
-    paddingVertical: vs(13),
-    alignItems: 'center',
+  loginButton: {
     marginTop: vs(6),
   },
-  primaryButtonText: {
-    color: Colors.white,
-    fontSize: ms(16),
-    fontFamily: Fonts.bold,
-  },
-  buttonDisabled: {
-    opacity: 0.65,
-  },
-  secondaryButton: {
+  signupLink: {
     marginTop: vs(14),
-    alignItems: 'center',
-    paddingVertical: vs(8),
-  },
-  secondaryButtonText: {
-    color: Colors.primary,
-    fontSize: ms(14),
-    fontFamily: Fonts.semiBold,
   },
 });
