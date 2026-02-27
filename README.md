@@ -1,97 +1,156 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# User Authentication App
 
-# Getting Started
+A React Native authentication app built with TypeScript, implementing signup, login, and session persistence using the Context API and AsyncStorage.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Implemented Features
 
-## Step 1: Start Metro
+### Authentication
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- **Signup** with name, email, and password. Duplicate email addresses are rejected with an "Email already exists" toast.
+- **Login** with email and password. Invalid credentials trigger an "Invalid credentials" error toast.
+- **Logout** clears the active session and returns to the auth flow.
+- **Session Persistence** via AsyncStorage -- the user stays logged in after an app restart.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### Form Handling
 
-```sh
-# Using npm
-npm start
+- **Formik** manages all form state, submission, and field-level validation.
+- Centralized validation logic in `src/Formik/Validations/` with proper `FormikErrors<T>` return types.
+- Centralized initial values in `src/Formik/InitialValues/`.
+- Email format validation and minimum 6-character password enforcement.
 
-# OR using Yarn
-yarn start
+### Navigation
+
+- **React Navigation** with separate `AuthStack` (Login, Signup) and `HomeStack` (Home).
+- `AppNavigator` conditionally renders the correct stack based on authentication state.
+- Loading indicator while the stored session is being hydrated on app launch.
+
+### UI / UX
+
+- **Custom toast notifications** via `react-native-toast-message` with styled error and success variants.
+- **Password visibility toggle** using Feather eye/eye-off icons from `react-native-vector-icons`.
+- **Responsive styling** using `react-native-size-matters` (`scale`, `verticalScale`, `moderateScale`) across all screens and components.
+- **Centralized theming** with `Colors` and `Fonts` constants (Poppins font family).
+- Reusable `AuthInput` component wrapped in `React.memo` for performance.
+
+### Code Quality
+
+- **MVVM architecture**: Screens are pure UI, all business logic lives in dedicated ViewController hooks (`useLoginController`, `useSignupController`, `useHomeController`).
+- **Strict TypeScript** with explicit return types on all functions, `as const` theme objects, `FormikErrors<T>` generics, and typed `catch (error: unknown)`.
+- **Performance optimizations**: `useCallback` on all callbacks, `useMemo` on context value with correct dependency arrays, `React.memo` on `AuthInput`.
+- No dead code, no unused imports, no unused styles.
+
+## Project Structure
+
+```
+src/
+  Components/
+    Input/
+      AuthInput.tsx            # Reusable text input with label, error, and password toggle
+  Config/
+    toastConfig.tsx            # Custom toast UI (error & success variants)
+  Context/
+    AuthContext.tsx             # AuthProvider, useAuth hook, login/signup/logout logic
+  Formik/
+    InitialValues/
+      index.tsx                # loginInitialValues, signupInitialValues
+    Validations/
+      index.tsx                # Email/password validators, form validation functions
+  Navigation/
+    AppNavigator.tsx           # Root navigator (AuthStack or HomeStack based on auth)
+    AuthStack.tsx              # Login + Signup stack
+    HomeStack.tsx              # Home stack
+  Screens/
+    Auth/
+      Login/index.tsx          # Login screen UI
+      Signup/index.tsx         # Signup screen UI
+    HomeScreens/
+      Home/index.tsx           # Home screen UI (user info + logout)
+  Theme/
+    index.ts                   # Colors and Fonts constants
+  Types/
+    auth.ts                    # User, AuthContextType
+    controllers.ts             # LoginControllerViewModel, SignupControllerViewModel, HomeControllerViewModel
+    forms.ts                   # LoginFormValues, SignupFormValues
+  ViewController/
+    Auth/
+      Login/index.tsx          # useLoginController hook
+      Signup/index.tsx         # useSignupController hook
+    HomeScreens/
+      Home/index.tsx           # useHomeController hook
 ```
 
-## Step 2: Build and run your app
+## Setup Instructions
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### Prerequisites
 
-### Android
+- Node.js >= 22.11.0
+- React Native CLI
+- Xcode (for iOS) / Android Studio (for Android)
+- CocoaPods (for iOS)
 
-```sh
-# Using npm
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. iOS only -- install pods
+
+```bash
+cd ios && pod install && cd ..
+```
+
+### 3. Start Metro bundler
+
+```bash
+npm start
+```
+
+### 4. Run the app
+
+```bash
+# Android
 npm run android
 
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+# iOS
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Validation Rules
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+| Screen | Field    | Rule                                  |
+| ------ | -------- | ------------------------------------- |
+| Login  | Email    | Must match a valid email format       |
+| Login  | Password | Cannot be empty                       |
+| Signup | Name     | Cannot be empty                       |
+| Signup | Email    | Must match a valid email format       |
+| Signup | Password | Minimum 6 characters                  |
 
-## Step 3: Modify your app
+Additional server-level checks:
 
-Now that you have successfully run the app, let's make changes!
+- **Login**: Throws "Invalid credentials" if no matching user is found.
+- **Signup**: Throws "Email already exists" if the email is already registered.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Test Flow
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+1. Open the app -- you land on the **Login** screen.
+2. Tap **Go to Signup** and create an account with valid data.
+3. On success you are automatically navigated to the **Home** screen showing your name and email.
+4. Tap **Logout** and verify you return to the Login screen.
+5. Login with the same credentials and verify you reach the Home screen again.
+6. Kill and reopen the app -- verify session persistence (you should still be logged in).
+7. Try signing up again with the same email -- verify the "Email already exists" error toast.
+8. Try logging in with wrong credentials -- verify the "Invalid credentials" error toast.
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## Key Libraries
 
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+| Library                          | Purpose                          |
+| -------------------------------- | -------------------------------- |
+| `@react-navigation/native`      | Navigation framework             |
+| `@react-navigation/native-stack` | Native stack navigator          |
+| `@react-native-async-storage/async-storage` | Persistent key-value storage |
+| `formik`                         | Form state management            |
+| `react-native-toast-message`     | Toast notifications              |
+| `react-native-vector-icons`      | Feather icons (eye toggle)       |
+| `react-native-size-matters`      | Responsive scaling utilities     |
+| `react-native-safe-area-context` | Safe area insets                 |
