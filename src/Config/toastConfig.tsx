@@ -39,9 +39,27 @@ function SuccessToast({ text1, text2 }: BaseToastProps) {
   );
 }
 
+function NetworkToast({ text1, text2 }: BaseToastProps) {
+  return (
+    <View style={styles.networkContainer}>
+      <View style={styles.networkAccent} />
+      <View style={styles.iconWrapper}>
+        <View style={styles.networkIconCircle}>
+          <Text style={styles.iconText}>⚡</Text>
+        </View>
+      </View>
+      <View style={styles.textWrapper}>
+        {text1 ? <Text style={styles.networkTitle}>{text1}</Text> : null}
+        {text2 ? <Text style={styles.networkMessage}>{text2}</Text> : null}
+      </View>
+    </View>
+  );
+}
+
 export const toastConfig = {
   error: (props: BaseToastProps) => <ErrorToast {...props} />,
   success: (props: BaseToastProps) => <SuccessToast {...props} />,
+  network: (props: BaseToastProps) => <NetworkToast {...props} />,
 };
 
 const BASE_CONTAINER = {
@@ -136,6 +154,35 @@ const styles = StyleSheet.create({
   successMessage: {
     fontSize: ms(13),
     color: Colors.successMessage,
+    fontFamily: Fonts.medium,
+    lineHeight: vs(18),
+  },
+  networkContainer: {
+    ...BASE_CONTAINER,
+    backgroundColor: Colors.warningLight,
+    shadowColor: Colors.warning,
+  },
+  networkAccent: {
+    ...BASE_ACCENT,
+    backgroundColor: Colors.warning,
+  },
+  networkIconCircle: {
+    width: ms(36),
+    height: ms(36),
+    borderRadius: ms(18),
+    backgroundColor: Colors.warning,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  networkTitle: {
+    fontSize: ms(15),
+    fontFamily: Fonts.bold,
+    color: Colors.warningTitle,
+    marginBottom: vs(3),
+  },
+  networkMessage: {
+    fontSize: ms(13),
+    color: Colors.warningMessage,
     fontFamily: Fonts.medium,
     lineHeight: vs(18),
   },

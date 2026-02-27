@@ -1,6 +1,8 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import {
   ActivityIndicator,
+  GestureResponderEvent,
+  Keyboard,
   Pressable,
   PressableProps,
   StyleProp,
@@ -54,10 +56,19 @@ function CustomButtonComponent({
   loading = false,
   disabled,
   style,
+  onPress,
   ...props
 }: CustomButtonProps): React.JSX.Element {
   const isDisabled = disabled || loading;
   const colors = variantStyles[variant];
+
+  const handlePress = useCallback(
+    (e: GestureResponderEvent) => {
+      Keyboard.dismiss();
+      onPress?.(e);
+    },
+    [onPress],
+  );
 
   return (
     <Pressable
@@ -69,6 +80,7 @@ function CustomButtonComponent({
         style,
       ]}
       disabled={isDisabled}
+      onPress={handlePress}
       {...props}
     >
       {loading ? (

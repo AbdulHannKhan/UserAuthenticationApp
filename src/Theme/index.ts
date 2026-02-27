@@ -22,6 +22,11 @@ export const Colors = {
   successLight: '#F0FDF4',
   successTitle: '#166534',
   successMessage: '#15803D',
+
+  warning: '#D97706',
+  warningLight: '#FFFBEB',
+  warningTitle: '#92400E',
+  warningMessage: '#B45309',
 } as const;
 
 export const Fonts = {

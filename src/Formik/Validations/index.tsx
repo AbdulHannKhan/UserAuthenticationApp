@@ -7,6 +7,8 @@ export const isValidEmail = (value: string): boolean => {
   return emailRegex.test(value.trim());
 };
 
+export const isValidName = (value: string): boolean => /^[a-zA-Z\s]+$/.test(value.trim());
+
 export const isValidPassword = (value: string): boolean => value.length >= 6;
 
 export const validateLoginForm = (
@@ -39,6 +41,8 @@ export const validateSignupForm = (
 
   if (!values.name.trim()) {
     errors.name = 'Name is required.';
+  } else if (!isValidName(values.name)) {
+    errors.name = 'Name can only contain letters (A-Z).';
   }
 
   if (!values.email.trim()) {
@@ -59,6 +63,10 @@ export const validateSignupForm = (
 export const getSignupValidationMessage = (values: SignupFormValues): string => {
   if (!values.name.trim() || !values.email.trim() || !values.password.trim()) {
     return 'Please fill all fields.';
+  }
+
+  if (!isValidName(values.name)) {
+    return 'Name can only contain letters (A-Z).';
   }
 
   if (!isValidEmail(values.email)) {
