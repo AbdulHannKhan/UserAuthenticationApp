@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 
-import { AuthContextType, User } from '../types/auth';
+import { AuthContextType, User } from '../Types/auth';
 
 const AUTH_USER_KEY = '@auth_user';
 const REGISTERED_USERS_KEY = '@registered_users';

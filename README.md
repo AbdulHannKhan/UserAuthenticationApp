@@ -24,19 +24,28 @@ A React Native authentication app built with TypeScript, implementing signup, lo
 - `AppNavigator` conditionally renders the correct stack based on authentication state.
 - Loading indicator while the stored session is being hydrated on app launch.
 
+### Network Monitoring
+
+- **Offline detection** via `@react-native-community/netinfo` using a custom `useNetworkMonitor` hook.
+- Displays a persistent "No Internet Connection" toast when the device goes offline.
+- Automatically shows a "Back Online" success toast when connectivity is restored.
+
 ### UI / UX
 
-- **Custom toast notifications** via `react-native-toast-message` with styled error and success variants.
+- **Custom toast notifications** via `react-native-toast-message` with styled error, success, and network warning variants.
 - **Password visibility toggle** using Feather eye/eye-off icons from `react-native-vector-icons`.
 - **Responsive styling** using `react-native-size-matters` (`scale`, `verticalScale`, `moderateScale`) across all screens and components.
 - **Centralized theming** with `Colors` and `Fonts` constants (Poppins font family).
-- Reusable `AuthInput` component wrapped in `React.memo` for performance.
+- **KeyboardAvoidingView** on auth screens for smooth keyboard handling on iOS.
+- **Keyboard auto-dismiss** on button press via the `CustomButton` component.
+- Reusable `AuthInput`, `CustomButton`, and `UserInfoCard` components, all wrapped in `React.memo` for performance.
+- `CustomButton` supports three variants: `primary`, `secondary`, and `destructive`.
 
 ### Code Quality
 
 - **MVVM architecture**: Screens are pure UI, all business logic lives in dedicated ViewController hooks (`useLoginController`, `useSignupController`, `useHomeController`).
 - **Strict TypeScript** with explicit return types on all functions, `as const` theme objects, `FormikErrors<T>` generics, and typed `catch (error: unknown)`.
-- **Performance optimizations**: `useCallback` on all callbacks, `useMemo` on context value with correct dependency arrays, `React.memo` on `AuthInput`.
+- **Performance optimizations**: `useCallback` on all callbacks, `useMemo` on context value with correct dependency arrays, `React.memo` on `AuthInput`, `CustomButton`, and `UserInfoCard`.
 - No dead code, no unused imports, no unused styles.
 
 ## Project Structure
@@ -44,10 +53,14 @@ A React Native authentication app built with TypeScript, implementing signup, lo
 ```
 src/
   Components/
+    Button/
+      CustomButton.tsx         # Reusable button with primary, secondary, and destructive variants
+    Card/
+      UserInfoCard.tsx         # Card displaying labeled rows of user information
     Input/
       AuthInput.tsx            # Reusable text input with label, error, and password toggle
   Config/
-    toastConfig.tsx            # Custom toast UI (error & success variants)
+    toastConfig.tsx            # Custom toast UI (error, success & network warning variants)
   Context/
     AuthContext.tsx             # AuthProvider, useAuth hook, login/signup/logout logic
   Formik/
@@ -55,6 +68,8 @@ src/
       index.tsx                # loginInitialValues, signupInitialValues
     Validations/
       index.tsx                # Email/password validators, form validation functions
+  Hooks/
+    useNetworkMonitor.ts       # Monitors connectivity and shows offline/online toasts
   Navigation/
     AppNavigator.tsx           # Root navigator (AuthStack or HomeStack based on auth)
     AuthStack.tsx              # Login + Signup stack
@@ -122,7 +137,7 @@ npm run ios
 | ------ | -------- | ------------------------------------- |
 | Login  | Email    | Must match a valid email format       |
 | Login  | Password | Cannot be empty                       |
-| Signup | Name     | Cannot be empty                       |
+| Signup | Name     | Cannot be empty, letters only (A-Z)   |
 | Signup | Email    | Must match a valid email format       |
 | Signup | Password | Minimum 6 characters                  |
 
@@ -154,3 +169,6 @@ Additional server-level checks:
 | `react-native-vector-icons`      | Feather icons (eye toggle)       |
 | `react-native-size-matters`      | Responsive scaling utilities     |
 | `react-native-safe-area-context` | Safe area insets                 |
+| `@react-native-community/netinfo` | Network connectivity monitoring |
+| `react-native-gesture-handler`   | Gesture handling for navigation  |
+| `react-native-screens`           | Native screen containers         |
