@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  View,
 } from 'react-native';
 import { moderateScale as ms, scale as s, verticalScale as vs } from 'react-native-size-matters';
 
@@ -22,10 +23,7 @@ export function Login({ navigation }: Props): React.JSX.Element {
     useLoginController({ navigation });
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={styles.title}>Welcome Back</Text>
         <Text style={styles.subtitle}>Login to continue</Text>
@@ -67,7 +65,7 @@ export function Login({ navigation }: Props): React.JSX.Element {
           style={styles.signupLink}
         />
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
