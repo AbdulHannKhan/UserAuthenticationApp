@@ -27,6 +27,7 @@ export function Signup({ navigation }: Props): React.JSX.Element {
     <View style={styles.container}>
       <ScrollView
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.content}
       >
         <Text style={styles.title}>Create Account</Text>
