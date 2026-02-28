@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import {
+  Dimensions,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -24,7 +25,10 @@ export function Signup({ navigation }: Props): React.JSX.Element {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+      >
         <Text style={styles.title}>Create Account</Text>
         <Text style={styles.subtitle}>Signup to get started</Text>
 
@@ -76,16 +80,17 @@ export function Signup({ navigation }: Props): React.JSX.Element {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
   },
   content: {
-    flexGrow: 1,
-    justifyContent: 'center',
     paddingHorizontal: s(20),
     paddingVertical: vs(24),
+    justifyContent: 'center',
+    flexGrow: 1,
   },
   title: {
     fontSize: ms(28),
@@ -97,7 +102,7 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     marginBottom: vs(24),
     fontSize: ms(15),
-    fontFamily: Fonts.regular,
+    fontFamily: Fonts.medium,
   },
   loginLink: {
     marginTop: vs(14),
